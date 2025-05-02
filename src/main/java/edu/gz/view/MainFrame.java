@@ -1,26 +1,50 @@
 package edu.gz.view;
 
-import javax.swing.*;
-import java.awt.*;
+import edu.gz.model.*;
+import edu.gz.utils.JsonLoader;
+import edu.gz.utils.ShelterManager;
+
+import javax.swing.JFrame;
+import java.awt.BorderLayout;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class MainFrame extends JFrame {
 
-    private PetPanel petPanel;
+	private PetPanel petPanel;
 
-    public MainFrame() {
-        super("Adopt Me - Pet Adoption Center");
+	public MainFrame() {
+		super("Adopt Me - Pet Adoption Center");
 
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(800, 600);
-        setLocationRelativeTo(null);
+		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		setSize(800, 600);
+		setLocationRelativeTo(null);
 
-        petPanel = new PetPanel();
-        add(petPanel, BorderLayout.CENTER);
+		petPanel = new PetPanel();
+		add(petPanel, BorderLayout.CENTER);
 
-        setVisible(true);
-    }
+		loadPetAndExoticData();
 
-    public PetPanel getPetPanel() {
-        return petPanel;
-    }
+		setVisible(true);
+	}
+
+	private void loadPetAndExoticData() {
+		ShelterManager manager = JsonLoader.loadPets("/pets.json");
+
+		ShelterManager exoticManager = JsonLoader.loadExoticPets("/exotic_animals.json");
+
+		List<Pet> allPets = new ArrayList<>();
+
+		for (Map.Entry<String, Shelter<? extends Pet>> entry : manager.getAllShelters().entrySet()) {
+			allPets.addAll(entry.getValue().getAllPets());
+		}
+
+		for (Map.Entry<String, Shelter<? extends Pet>> entry : exoticManager.getAllShelters().entrySet()) {
+			allPets.addAll(entry.getValue().getAllPets());
+		}
+
+		PetTableModel model = new PetTableModel(allPets);
+		petPanel.getPetTable().setModel(model);
+	}
 }
