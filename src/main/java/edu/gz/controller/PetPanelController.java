@@ -43,6 +43,7 @@ public class PetPanelController {
 	private class RemoveButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
+			showRemovePetDialog();
 		}
 	}
 
@@ -185,6 +186,58 @@ public class PetPanelController {
 				} else {
 					JOptionPane.showMessageDialog(null, "Pet has already been adopted.");
 				}
+			} catch (NumberFormatException ex) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
+			}
+		}
+	}
+
+	private void showRemovePetDialog() {
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+		JTextField idField = new JTextField(10);
+
+		panel.add(new JLabel("Enter Pet ID:"));
+		panel.add(idField);
+
+		int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
+
+		if (option == JOptionPane.OK_OPTION) {
+			try {
+				int petId = Integer.parseInt(idField.getText().trim());
+				String petType;
+				try {
+				    petType = shelterManager.getPetById(petId).getType();
+				} catch (NullPointerException e) {
+				    JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
+				    return;
+				}
+				boolean removed = false;
+
+				switch (petType) {
+				case "Dog":
+					removed = shelterManager.removeDog(petId);
+					break;
+				case "Cat":
+					removed = shelterManager.removeCat(petId);
+					break;
+				case "Rabbit":
+					removed = shelterManager.removeRabbit(petId);
+					break;
+				case "Exotic":
+					removed = shelterManager.removeExotic(petId);
+					break;
+				default:
+					removed = false;
+				}
+				if (removed) {
+					PetTableModel model = new PetTableModel(shelterManager.getAllPets());
+					petPanel.getPetTable().setModel(model);
+				} else {
+					JOptionPane.showMessageDialog(null, "Pet has already been removed.");
+				}
+
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
 			}

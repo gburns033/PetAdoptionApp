@@ -58,6 +58,23 @@ public class ShelterManager {
 	public boolean adoptExotic(int id) {
 		return getExoticShelter().adoptPet(id);
 	}
+	
+	public boolean removeDog(int id) {
+		return getDogShelter().removePet(id);
+	}
+	
+	public boolean removeCat(int id) {
+	    return getCatShelter().removePet(id);
+	}
+
+	public boolean removeRabbit(int id) {
+	    return getRabbitShelter().removePet(id);
+	}
+
+	public boolean removeExotic(int id) {
+	    return getExoticShelter().removePet(id);
+	}
+
 
 	@SuppressWarnings("unchecked")
 	public Shelter<Dog> getDogShelter() {
