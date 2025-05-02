@@ -2,7 +2,6 @@ package edu.gz.model;
 
 import javax.swing.table.AbstractTableModel;
 import java.util.List;
-import edu.gz.model.Pet;
 
 public class PetTableModel extends AbstractTableModel {
 	private final String[] columnNames = { "ID", "Name", "Type", "Species", "Age", "Adopted" };
