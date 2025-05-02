@@ -1,8 +1,8 @@
 package edu.gz.utils;
 
-import com.google.gson.Gson;
+import com.google.gson.*;
 import com.google.gson.reflect.TypeToken;
-import edu.gz.model.Pet;
+import edu.gz.model.*;
 
 import java.io.InputStreamReader;
 import java.io.InputStream;
@@ -10,19 +10,39 @@ import java.lang.reflect.Type;
 import java.util.List;
 
 public class JsonLoader {
+	public static ShelterManager loadPets(String resourcePath) {
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(Pet.class, new PetDeserializer()).create();
 
-    public static List<Pet> loadPets(String resourcePath) {
-        try {
-            InputStream is = JsonLoader.class.getResourceAsStream(resourcePath);
-            if (is == null) {
-                throw new RuntimeException("File not found: " + resourcePath);
-            }
+			InputStream is = JsonLoader.class.getResourceAsStream(resourcePath);
+			if (is == null) {
+				throw new RuntimeException("File not found: " + resourcePath);
+			}
 
-            InputStreamReader reader = new InputStreamReader(is);
-            Type petListType = new TypeToken<List<Pet>>(){}.getType();
-            return new Gson().fromJson(reader, petListType);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to load pets: " + e.getMessage(), e);
-        }
-    }
+			InputStreamReader reader = new InputStreamReader(is);
+
+			Type petListType = new TypeToken<List<Pet>>() {
+			}.getType();
+			List<Pet> pets = gson.fromJson(reader, petListType);
+
+			ShelterManager manager = ShelterManager.getInstance();
+
+			for (Pet pet : pets) {
+				if (pet instanceof Dog) {
+					manager.addDogToShelter((Dog) pet);
+				} else if (pet instanceof Cat) {
+					manager.addCatToShelter((Cat) pet);
+				} else if (pet instanceof Rabbit) {
+					manager.addRabbitToShelter((Rabbit) pet);
+				} else if (pet instanceof ExoticAnimalAdapter) {
+					manager.addExoticToShelter((ExoticAnimalAdapter) pet);
+				}
+			}
+
+			return manager;
+
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to load pets: " + e.getMessage(), e);
+		}
+	}
 }
