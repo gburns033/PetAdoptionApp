@@ -43,7 +43,6 @@ public class PetPanelController {
 	private class RemoveButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
 		}
 	}
 
@@ -152,40 +151,40 @@ public class PetPanelController {
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
 		JTextField idField = new JTextField(10);
-		JTextField typeField = new JTextField(10);
 
 		panel.add(new JLabel("Enter Pet ID:"));
 		panel.add(idField);
-		panel.add(new JLabel("Enter Pet Type:"));
-		panel.add(typeField);
 
 		int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
 
 		if (option == JOptionPane.OK_OPTION) {
 			try {
 				int petId = Integer.parseInt(idField.getText().trim());
-				String petType = typeField.getText().trim();
+				String petType = shelterManager.getPetById(petId).getType();
+				boolean isAdopted = false;
 
 				switch (petType) {
 				case "Dog":
-					shelterManager.adoptDog(petId);
+					isAdopted = shelterManager.adoptDog(petId);
 					break;
 				case "Cat":
-					shelterManager.adoptCat(petId);
+					isAdopted = shelterManager.adoptCat(petId);
 					break;
 				case "Rabbit":
-					shelterManager.adoptRabbit(petId);
+					isAdopted = shelterManager.adoptRabbit(petId);
 					break;
 				case "Exotic":
-					shelterManager.adoptExotic(petId);
+					isAdopted = shelterManager.adoptExotic(petId);
 					break;
 				default:
-					JOptionPane.showMessageDialog(null, "Please enter a valid pet type.");
+					JOptionPane.showMessageDialog(null, "Invalid pet type.");
 				}
-				
-				PetTableModel model = new PetTableModel(shelterManager.getAllPets());
-				petPanel.getPetTable().setModel(model);
-				
+				if (isAdopted) {
+					PetTableModel model = new PetTableModel(shelterManager.getAllPets());
+					petPanel.getPetTable().setModel(model);
+				} else {
+					JOptionPane.showMessageDialog(null, "Pet has already been adopted.");
+				}
 			} catch (NumberFormatException ex) {
 				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
 			}
