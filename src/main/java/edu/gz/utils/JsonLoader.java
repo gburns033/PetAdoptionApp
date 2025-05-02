@@ -45,4 +45,33 @@ public class JsonLoader {
 			throw new RuntimeException("Failed to load pets: " + e.getMessage(), e);
 		}
 	}
+
+	public static ShelterManager loadExoticPets(String resourcePath) {
+		try {
+			Gson gson = new GsonBuilder().registerTypeAdapter(ExoticAnimalAdapter.class, new ExoticAnimalDeserializer())
+					.registerTypeAdapter(Pet.class, new PetDeserializer()).create();
+
+			InputStream is = JsonLoader.class.getResourceAsStream(resourcePath);
+			if (is == null) {
+				throw new RuntimeException("File not found: " + resourcePath);
+			}
+
+			InputStreamReader reader = new InputStreamReader(is);
+
+			Type exoticPetListType = new TypeToken<List<ExoticAnimalAdapter>>() {
+			}.getType();
+			List<ExoticAnimalAdapter> exoticPets = gson.fromJson(reader, exoticPetListType);
+
+			ShelterManager manager = ShelterManager.getInstance();
+
+			for (ExoticAnimalAdapter exoticPet : exoticPets) {
+				manager.addExoticToShelter(exoticPet);
+			}
+
+			return manager;
+
+		} catch (Exception e) {
+			throw new RuntimeException("Failed to load exotic animals: " + e.getMessage(), e);
+		}
+	}
 }
