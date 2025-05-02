@@ -96,4 +96,16 @@ public class ShelterManager {
 		
 		return allPets;
 	}
+	
+	public Pet getPetById(int id) {
+		List<Pet> pets = getAllPets();
+		
+		for (int i = 0; i < pets.size(); i++) {
+			if (pets.get(i).getId() == id) {
+				return pets.get(i);
+			}
+		}
+		
+		return null;
+	}
 }
