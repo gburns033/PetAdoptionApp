@@ -32,15 +32,11 @@ public class MainFrame extends JFrame {
 	private void loadPetAndExoticData() {
 		ShelterManager manager = JsonLoader.loadPets("/pets.json");
 
-		ShelterManager exoticManager = JsonLoader.loadExoticPets("/exotic_animals.json");
+		JsonLoader.loadExoticPets("/exotic_animals.json");
 
 		List<Pet> allPets = new ArrayList<>();
 
 		for (Map.Entry<String, Shelter<? extends Pet>> entry : manager.getAllShelters().entrySet()) {
-			allPets.addAll(entry.getValue().getAllPets());
-		}
-
-		for (Map.Entry<String, Shelter<? extends Pet>> entry : exoticManager.getAllShelters().entrySet()) {
 			allPets.addAll(entry.getValue().getAllPets());
 		}
 
