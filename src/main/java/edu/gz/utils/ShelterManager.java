@@ -1,6 +1,8 @@
 package edu.gz.utils;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import edu.gz.model.*;
@@ -83,5 +85,15 @@ public class ShelterManager {
 
 	public Map<String, Shelter<? extends Pet>> getAllShelters() {
 		return shelters;
+	}
+	
+	public List<Pet> getAllPets() {
+		List<Pet> allPets = new ArrayList<>();
+
+		for (Map.Entry<String, Shelter<? extends Pet>> entry : ShelterManager.getInstance().getAllShelters().entrySet()) {
+			allPets.addAll(entry.getValue().getAllPets());
+		}
+		
+		return allPets;
 	}
 }
