@@ -12,55 +12,55 @@ import java.awt.event.ActionListener;
 import java.util.List;
 
 public class PetPanelController {
-	
+
 	private PetPanel petPanel;
 	private ShelterManager shelterManager = ShelterManager.getInstance();
-	
+
 	public PetPanelController(PetPanel petPanel) {
 		this.petPanel = petPanel;
-		
+
 		petPanel.getAddButton().addActionListener(new AddButtonListener());
 		petPanel.getAdoptButton().addActionListener(new AdoptButtonListener());
-        petPanel.getRemoveButton().addActionListener(new RemoveButtonListener());
-        petPanel.getViewButton().addActionListener(new ViewButtonListener());
-        petPanel.getSaveButton().addActionListener(new SaveButtonListener());
+		petPanel.getRemoveButton().addActionListener(new RemoveButtonListener());
+		petPanel.getViewButton().addActionListener(new ViewButtonListener());
+		petPanel.getSaveButton().addActionListener(new SaveButtonListener());
 	}
-	
+
 	private class AddButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 //			showAddPetDialog();
 		}
 	}
-	
+
 	private class AdoptButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			showAdoptPetDialog();
 		}
 	}
-	
+
 	private class RemoveButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            
-        }
-    }
-	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		}
+	}
+
 	private class ViewButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            
-        }
-    }
-	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		}
+	}
+
 	private class SaveButtonListener implements ActionListener {
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            
-        }
-    }
-	
+		@Override
+		public void actionPerformed(ActionEvent e) {
+
+		}
+	}
+
 //	public Pet showAddPetDialog() {
 //		JTextField nameField = new JTextField();
 //		JTextField ageField = new JTextField();
@@ -146,35 +146,49 @@ public class PetPanelController {
 //	        //return new Pet(id, name, type, species, false);
 //	    }
 //	}
-	
+
 	private void showAdoptPetDialog() {
 		JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-        JTextField idField = new JTextField(10);
-        JTextField typeField = new JTextField(10);
+		JTextField idField = new JTextField(10);
+		JTextField typeField = new JTextField(10);
 
-        panel.add(new JLabel("Enter Pet ID:"));
-        panel.add(idField);
-        panel.add(new JLabel("Enter Pet Type:"));
-        panel.add(typeField);
-        
-        int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
-        
-        if (option == JOptionPane.OK_OPTION) {
-            try {
-                int petId = Integer.parseInt(idField.getText().trim());
-                String petType = typeField.getText().trim();
+		panel.add(new JLabel("Enter Pet ID:"));
+		panel.add(idField);
+		panel.add(new JLabel("Enter Pet Type:"));
+		panel.add(typeField);
 
-                switch (petType) {
-                case "Dog":
-                	shelterManager.adoptDog(petId);
-                }
-                PetTableModel model = new PetTableModel(shelterManager.getAllPets());
-        		petPanel.getPetTable().setModel(model);
-            } catch (NumberFormatException ex) {
-                JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
-            }
-        }
+		int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
+
+		if (option == JOptionPane.OK_OPTION) {
+			try {
+				int petId = Integer.parseInt(idField.getText().trim());
+				String petType = typeField.getText().trim();
+
+				switch (petType) {
+				case "Dog":
+					shelterManager.adoptDog(petId);
+					break;
+				case "Cat":
+					shelterManager.adoptCat(petId);
+					break;
+				case "Rabbit":
+					shelterManager.adoptRabbit(petId);
+					break;
+				case "Exotic":
+					shelterManager.adoptExotic(petId);
+					break;
+				default:
+					JOptionPane.showMessageDialog(null, "Please enter a valid pet type.");
+				}
+				
+				PetTableModel model = new PetTableModel(shelterManager.getAllPets());
+				petPanel.getPetTable().setModel(model);
+				
+			} catch (NumberFormatException ex) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
+			}
+		}
 	}
 }

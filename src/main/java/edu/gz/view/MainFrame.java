@@ -1,5 +1,6 @@
 package edu.gz.view;
 
+import edu.gz.controller.PetPanelController;
 import edu.gz.model.*;
 import edu.gz.utils.JsonLoader;
 import edu.gz.utils.ShelterManager;
@@ -22,6 +23,7 @@ public class MainFrame extends JFrame {
 		setLocationRelativeTo(null);
 
 		petPanel = new PetPanel();
+		new PetPanelController(petPanel);
 		add(petPanel, BorderLayout.CENTER);
 
 		loadPetAndExoticData();
