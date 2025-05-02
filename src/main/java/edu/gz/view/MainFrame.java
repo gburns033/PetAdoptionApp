@@ -1,12 +1,14 @@
 package edu.gz.view;
 
-import edu.gz.utils.JsonLoader;
 import edu.gz.model.*;
+import edu.gz.utils.JsonLoader;
+import edu.gz.utils.ShelterManager;
 
 import javax.swing.JFrame;
-
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class MainFrame extends JFrame {
 
@@ -28,8 +30,14 @@ public class MainFrame extends JFrame {
 	}
 
 	private void loadPetData() {
-		List<Pet> petList = JsonLoader.loadPets("/pets.json");
-		PetTableModel model = new PetTableModel(petList);
+		ShelterManager manager = JsonLoader.loadPets("/pets.json");
+
+		List<Pet> allPets = new ArrayList<>();
+		for (Map.Entry<String, Shelter<? extends Pet>> entry : manager.getAllShelters().entrySet()) {
+			allPets.addAll(entry.getValue().getAllPets());
+		}
+
+		PetTableModel model = new PetTableModel(allPets);
 		petPanel.getPetTable().setModel(model);
 	}
 }
