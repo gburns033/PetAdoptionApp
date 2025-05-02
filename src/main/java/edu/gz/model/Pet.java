@@ -1,6 +1,6 @@
 package edu.gz.model;
 
-public abstract class Pet {
+public abstract class Pet implements Comparable<Pet> {
 	protected int id;
 	protected String name;
 	protected String type;
@@ -63,5 +63,10 @@ public abstract class Pet {
 
 	public void setAdopted(boolean adopted) {
 		this.adopted = adopted;
+	}
+	
+	@Override
+	public int compareTo(Pet other) {
+		return this.name.compareTo(other.name);
 	}
 }
