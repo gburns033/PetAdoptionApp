@@ -1,6 +1,6 @@
 package edu.gz.controller;
 
-import edu.gz.model.PetTableModel;
+import edu.gz.model.*;
 import edu.gz.utils.PetDataSaver;
 import edu.gz.utils.ShelterManager;
 import edu.gz.view.PetPanel;
@@ -193,54 +193,48 @@ public class PetPanelController {
 	}
 
 	private void showRemovePetDialog() {
-		JPanel panel = new JPanel();
-		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	    JPanel panel = new JPanel();
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-		JTextField idField = new JTextField(10);
+	    JTextField idField = new JTextField(10);
 
-		panel.add(new JLabel("Enter Pet ID:"));
-		panel.add(idField);
+	    panel.add(new JLabel("Enter Pet ID:"));
+	    panel.add(idField);
 
-		int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
+	    int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
 
-		if (option == JOptionPane.OK_OPTION) {
-			try {
-				int petId = Integer.parseInt(idField.getText().trim());
-				String petType;
-				try {
-				    petType = ShelterManager.getInstance().getPetById(petId).getType();
-				} catch (NullPointerException e) {
-				    JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
-				    return;
-				}
-				boolean removed = false;
+	    if (option == JOptionPane.OK_OPTION) {
+	        try {
+	            int petId = Integer.parseInt(idField.getText().trim());
+	            Pet pet = ShelterManager.getInstance().getPetById(petId);
 
-				switch (petType) {
-				case "Dog":
-					removed = ShelterManager.getInstance().removeDog(petId);
-					break;
-				case "Cat":
-					removed = ShelterManager.getInstance().removeCat(petId);
-					break;
-				case "Rabbit":
-					removed = ShelterManager.getInstance().removeRabbit(petId);
-					break;
-				case "Exotic":
-					removed = ShelterManager.getInstance().removeExotic(petId);
-					break;
-				default:
-					removed = false;
-				}
-				if (removed) {
-					PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
-					petPanel.getPetTable().setModel(model);
-				} else {
-					JOptionPane.showMessageDialog(null, "Pet has already been removed.");
-				}
+	            if (pet == null) {
+	                JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
+	                return;
+	            }
 
-			} catch (NumberFormatException ex) {
-				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
-			}
-		}
+	            boolean removed = false;
+
+	            if (pet instanceof Dog) {
+	                removed = ShelterManager.getInstance().removeDog(petId);
+	            } else if (pet instanceof Cat) {
+	                removed = ShelterManager.getInstance().removeCat(petId);
+	            } else if (pet instanceof Rabbit) {
+	                removed = ShelterManager.getInstance().removeRabbit(petId);
+	            } else if (pet instanceof ExoticAnimalAdapter) {
+	                removed = ShelterManager.getInstance().removeExotic(petId);
+	            }
+
+	            if (removed) {
+	                PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
+	                petPanel.getPetTable().setModel(model);
+	            } else {
+	                JOptionPane.showMessageDialog(null, "Pet has already been removed.");
+	            }
+
+	        } catch (NumberFormatException ex) {
+	            JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
+	        }
+	    }
 	}
 }
