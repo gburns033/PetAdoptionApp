@@ -1,7 +1,7 @@
 package edu.gz.controller;
 
-import edu.gz.model.Pet;
 import edu.gz.model.PetTableModel;
+import edu.gz.utils.PetDataSaver;
 import edu.gz.utils.ShelterManager;
 import edu.gz.view.PetPanel;
 
@@ -9,12 +9,10 @@ import javax.swing.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.List;
 
 public class PetPanelController {
 
 	private PetPanel petPanel;
-	private ShelterManager shelterManager = ShelterManager.getInstance();
 
 	public PetPanelController(PetPanel petPanel) {
 		this.petPanel = petPanel;
@@ -57,7 +55,9 @@ public class PetPanelController {
 	private class SaveButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-
+			PetDataSaver petDataSaver = new PetDataSaver();
+			petDataSaver.savePets();
+			petDataSaver.saveExoticAnimals(ShelterManager.getInstance());
 		}
 	}
 
@@ -161,27 +161,27 @@ public class PetPanelController {
 		if (option == JOptionPane.OK_OPTION) {
 			try {
 				int petId = Integer.parseInt(idField.getText().trim());
-				String petType = shelterManager.getPetById(petId).getType();
+				String petType = ShelterManager.getInstance().getPetById(petId).getType();
 				boolean isAdopted = false;
 
 				switch (petType) {
 				case "Dog":
-					isAdopted = shelterManager.adoptDog(petId);
+					isAdopted = ShelterManager.getInstance().adoptDog(petId);
 					break;
 				case "Cat":
-					isAdopted = shelterManager.adoptCat(petId);
+					isAdopted = ShelterManager.getInstance().adoptCat(petId);
 					break;
 				case "Rabbit":
-					isAdopted = shelterManager.adoptRabbit(petId);
+					isAdopted = ShelterManager.getInstance().adoptRabbit(petId);
 					break;
 				case "Exotic":
-					isAdopted = shelterManager.adoptExotic(petId);
+					isAdopted = ShelterManager.getInstance().adoptExotic(petId);
 					break;
 				default:
 					JOptionPane.showMessageDialog(null, "Invalid pet type.");
 				}
 				if (isAdopted) {
-					PetTableModel model = new PetTableModel(shelterManager.getAllPets());
+					PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
 					petPanel.getPetTable().setModel(model);
 				} else {
 					JOptionPane.showMessageDialog(null, "Pet has already been adopted.");
@@ -208,7 +208,7 @@ public class PetPanelController {
 				int petId = Integer.parseInt(idField.getText().trim());
 				String petType;
 				try {
-				    petType = shelterManager.getPetById(petId).getType();
+				    petType = ShelterManager.getInstance().getPetById(petId).getType();
 				} catch (NullPointerException e) {
 				    JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
 				    return;
@@ -217,22 +217,22 @@ public class PetPanelController {
 
 				switch (petType) {
 				case "Dog":
-					removed = shelterManager.removeDog(petId);
+					removed = ShelterManager.getInstance().removeDog(petId);
 					break;
 				case "Cat":
-					removed = shelterManager.removeCat(petId);
+					removed = ShelterManager.getInstance().removeCat(petId);
 					break;
 				case "Rabbit":
-					removed = shelterManager.removeRabbit(petId);
+					removed = ShelterManager.getInstance().removeRabbit(petId);
 					break;
 				case "Exotic":
-					removed = shelterManager.removeExotic(petId);
+					removed = ShelterManager.getInstance().removeExotic(petId);
 					break;
 				default:
 					removed = false;
 				}
 				if (removed) {
-					PetTableModel model = new PetTableModel(shelterManager.getAllPets());
+					PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
 					petPanel.getPetTable().setModel(model);
 				} else {
 					JOptionPane.showMessageDialog(null, "Pet has already been removed.");

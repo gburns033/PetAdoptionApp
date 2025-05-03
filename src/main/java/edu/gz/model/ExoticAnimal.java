@@ -12,6 +12,18 @@ public class ExoticAnimal {
     private String subSpecies;
     private int yearsOld;
 
+    public ExoticAnimal() {
+    	
+    }
+    
+    public ExoticAnimal(ExoticAnimalAdapter adapter) {
+    	this.uniqueId = adapter.getId();
+    	this.animalName = adapter.getName();
+    	this.category = adapter.getType();
+    	this.subSpecies = adapter.getSpecies();
+    	this.yearsOld = adapter.getAge();
+    }
+    
     /**
      * Returns the unique ID of the exotic animal.
      *

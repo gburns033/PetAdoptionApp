@@ -5,6 +5,11 @@
 	<groupId>edu.gz</groupId>
 	<artifactId>PetAdoptionApp</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	
+	<properties>
+    	<maven.compiler.source>24</maven.compiler.source>
+    	<maven.compiler.target>24</maven.compiler.target>
+	</properties>
 
 	<dependencies>
 		<dependency>

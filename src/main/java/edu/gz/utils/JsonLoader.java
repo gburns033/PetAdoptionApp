@@ -5,11 +5,14 @@ import com.google.gson.reflect.TypeToken;
 import edu.gz.model.*;
 
 import java.io.InputStreamReader;
+import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
 public class JsonLoader {
+	
 	public static ShelterManager loadPets(String resourcePath) {
 		try {
 			Gson gson = new GsonBuilder().registerTypeAdapter(Pet.class, new PetDeserializer()).create();
@@ -20,6 +23,8 @@ public class JsonLoader {
 			}
 
 			InputStreamReader reader = new InputStreamReader(is);
+//			
+//			printInputStream(is); 
 
 			Type petListType = new TypeToken<List<Pet>>() {
 			}.getType();
@@ -45,6 +50,18 @@ public class JsonLoader {
 			throw new RuntimeException("Failed to load pets: " + e.getMessage(), e);
 		}
 	}
+	
+    public static void printInputStream(InputStream inputStream) {
+        try (InputStreamReader reader = new InputStreamReader(inputStream);
+             BufferedReader bufferedReader = new BufferedReader(reader)) {
+            String line;
+            while ((line = bufferedReader.readLine()) != null) {
+                System.out.println(line);
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
 	public static ShelterManager loadExoticPets(String resourcePath) {
 		try {
@@ -55,6 +72,8 @@ public class JsonLoader {
 			if (is == null) {
 				throw new RuntimeException("File not found: " + resourcePath);
 			}
+			
+//			printInputStream(is);
 
 			InputStreamReader reader = new InputStreamReader(is);
 
