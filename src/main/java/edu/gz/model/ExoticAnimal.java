@@ -6,7 +6,6 @@ package edu.gz.model;
  * modify these properties.
  */
 public class ExoticAnimal {
-
 	private String uniqueId;
 	private String animalName;
 	private String category;

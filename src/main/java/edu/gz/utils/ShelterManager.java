@@ -30,8 +30,8 @@ public class ShelterManager {
 		return instance;
 	}
 	
-	public void registerUsedId(int id) {
-	    usedIds.add(id);
+	public boolean registerUsedId(int id) {
+	    return usedIds.add(id);
 	}
 	
 	public int generateUniqueId() {

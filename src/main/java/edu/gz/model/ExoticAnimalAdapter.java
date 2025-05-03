@@ -6,7 +6,6 @@ package edu.gz.model;
  * attributes for a pet, enabling exotic animals to be used in systems that expect {@code Pet} objects.
  */
 public class ExoticAnimalAdapter extends Pet {
-    
     private ExoticAnimal exoticAnimal;
 
     /**
