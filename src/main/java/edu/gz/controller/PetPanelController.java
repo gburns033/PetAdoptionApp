@@ -2,11 +2,18 @@ package edu.gz.controller;
 
 import edu.gz.model.*;
 import edu.gz.utils.PetDataSaver;
+import edu.gz.utils.PetFactory;
 import edu.gz.utils.ShelterManager;
 import edu.gz.view.PetPanel;
 
 import javax.swing.*;
 
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -27,7 +34,7 @@ public class PetPanelController {
 	private class AddButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
-//			showAddPetDialog();
+			showAddPetDialog();
 		}
 	}
 
@@ -61,91 +68,133 @@ public class PetPanelController {
 		}
 	}
 
-//	public Pet showAddPetDialog() {
-//		JTextField nameField = new JTextField();
-//		JTextField ageField = new JTextField();
-//		JTextField speciesField = new JTextField();
-//		
-//		String[] speciesOptions = { "Dog", "Cat", "Rabbit", "Exotic (Other)" };
-//		JComboBox<String> speciesComboBox = new JComboBox<>(speciesOptions);
-//		
-//		JTextField exoticField = new JTextField();
-//		JLabel exoticLabel = new JLabel("Specify exotic species:");
-//		
-//		exoticField.setVisible(false);
-//		exoticLabel.setVisible(false);
-//		
-//		JPanel exoticPanel = new JPanel(new GridLayout(0, 1));
-//		exoticPanel.add(exoticLabel);
-//		exoticPanel.add(exoticField);
-//		
-//		speciesComboBox.addActionListener(e -> {
-//			boolean isExotic = "Exotic".equals(speciesComboBox.getSelectedItem());
-//			exoticField.setVisible(isExotic);
-//			exoticLabel.setVisible(isExotic);
-//			exoticPanel.revalidate();
-//			exoticPanel.repaint();
-//		});
-//		
-//		JPanel panel = new JPanel();
-//		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-//		panel.add(new JLabel("Name:"));
-//		panel.add(nameField);
-//	    panel.add(new JLabel("Age:"));
-//	    panel.add(ageField);
-//	    panel.add(new JLabel("Type:"));
-//	    panel.add(speciesComboBox);
-//	    panel.add(exoticPanel);
-//	    panel.add(new JLabel("Species:"));
-//	    panel.add(speciesField);
-//	    
-//	    while (true) {
-//	    	int result = JOptionPane.showConfirmDialog(null, panel, "Add New Pet", JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//	    	
-//	    	if (result != JOptionPane.OK_OPTION) {
-//	    		return null;
-//	    	}
-//	    	
-//	    	String name = nameField.getText().trim();
-//	    	String ageText = ageField.getText().trim();
-//	        String type = (String) speciesComboBox.getSelectedItem();
-//	        String species = speciesField.getText().trim();
-//	        
-//	        if (name.isEmpty()) {
-//	        	JOptionPane.showMessageDialog(null, "Name cannot be empty.");
-//	        	continue;
-//	        }
-//	        
-//	        int age;
-//	        try {
-//	        	age = Integer.parseInt(ageText);
-//	        	
-//	        	if (age < 0) {
-//	        		throw new NumberFormatException();
-//	        	}
-//	        } catch (NumberFormatException e) {
-//	        	JOptionPane.showMessageDialog(null, "Age must be 0 or above.");
-//	        	continue;
-//	        }
-//	        
-//	        if ("Exotic".equals(type)) {
-//	        	String exoticType = exoticField.getText().trim();
-//	        	if (exoticType.isEmpty()) {
-//	        		JOptionPane.showMessageDialog(null, "Exotic species cannot be empty.");
-//	        		continue;
-//	        	}
-//	        	
-//	        	type = exoticType;
-//	        }
-//	        
-//	        if (species.isEmpty()) {
-//	        	JOptionPane.showMessageDialog(null, "Species cannot be empty.");
-//	        	continue;
-//	        }
-//	        
-//	        //return new Pet(id, name, type, species, false);
-//	    }
-//	}
+	private void showAddPetDialog() {
+		JTextField nameField = new JTextField(15);
+		JTextField ageField = new JTextField(15);
+		JTextField speciesField = new JTextField(15);
+
+		String[] speciesOptions = { "Dog", "Cat", "Rabbit", "Exotic (Other)" };
+		JComboBox<String> speciesComboBox = new JComboBox<>(speciesOptions);
+
+		JLabel exoticTypeLabel = new JLabel("Exotic Type:");
+		JTextField exoticTypeField = new JTextField(15);
+		Dimension reservedSize = new Dimension(150, exoticTypeField.getPreferredSize().height);
+		exoticTypeField.setPreferredSize(reservedSize);
+
+		JPanel panel = new JPanel(new GridBagLayout());
+
+		// Initial "hidden but reserved" state
+		exoticTypeField.setEditable(false);
+		exoticTypeField.setOpaque(false);
+		exoticTypeField.setBorder(null);
+		exoticTypeField.setBackground(panel.getBackground());
+		exoticTypeLabel.setForeground(panel.getBackground());
+
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(5, 5, 5, 5);
+		gbc.anchor = GridBagConstraints.WEST;
+		gbc.fill = GridBagConstraints.HORIZONTAL;
+
+		gbc.gridx = 0; gbc.gridy = 0;
+		panel.add(new JLabel("Name:"), gbc);
+		gbc.gridx = 1;
+		panel.add(nameField, gbc);
+
+		gbc.gridx = 0; gbc.gridy = 1;
+		panel.add(new JLabel("Age:"), gbc);
+		gbc.gridx = 1;
+		panel.add(ageField, gbc);
+
+		gbc.gridx = 0; gbc.gridy = 2;
+		panel.add(new JLabel("Type:"), gbc);
+		gbc.gridx = 1;
+		panel.add(speciesComboBox, gbc);
+
+		// Exotic Type
+		gbc.gridx = 0; gbc.gridy = 3;
+		panel.add(exoticTypeLabel, gbc);
+		gbc.gridx = 1;
+		panel.add(exoticTypeField, gbc);
+
+		gbc.gridx = 0; gbc.gridy = 4;
+		panel.add(new JLabel("Species (e.g., Siamese, Iguana):"), gbc);
+		gbc.gridx = 1;
+		panel.add(speciesField, gbc);
+
+		// Listener for showing/hiding exotic type
+		speciesComboBox.addActionListener(e -> {
+			boolean isExotic = speciesComboBox.getSelectedItem().toString().startsWith("Exotic");
+
+			if (isExotic) {
+				exoticTypeField.setEditable(true);
+				exoticTypeField.setOpaque(true);
+				exoticTypeField.setBackground(Color.WHITE);
+				exoticTypeField.setBorder(UIManager.getBorder("TextField.border"));
+				exoticTypeLabel.setForeground(null); // Restore default color
+			} else {
+				exoticTypeField.setEditable(false);
+				exoticTypeField.setText("");
+				exoticTypeField.setOpaque(false);
+				exoticTypeField.setBorder(null);
+				exoticTypeField.setBackground(panel.getBackground());
+				exoticTypeLabel.setForeground(panel.getBackground());
+			}
+		});
+
+		boolean inputValid = false;
+
+		while (!inputValid) {
+			int result = JOptionPane.showConfirmDialog(null, panel, "Add New Pet",
+					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+
+			if (result != JOptionPane.OK_OPTION) {
+				return;
+			}
+
+			String name = nameField.getText().trim();
+			String ageText = ageField.getText().trim();
+			String type = (String) speciesComboBox.getSelectedItem();
+			String species = speciesField.getText().trim();
+
+			if (name.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Name cannot be empty.");
+				continue;
+			}
+
+			int age;
+			try {
+				age = Integer.parseInt(ageText);
+				if (age < 0) throw new NumberFormatException();
+			} catch (NumberFormatException e) {
+				JOptionPane.showMessageDialog(null, "Age must be 0 or above.");
+				continue;
+			}
+
+			if (species.isEmpty()) {
+				JOptionPane.showMessageDialog(null, "Species cannot be empty.");
+				continue;
+			}
+
+			if ("Exotic (Other)".equals(type)) {
+				String exoticType = exoticTypeField.getText().trim();
+				if (exoticType.isEmpty()) {
+					JOptionPane.showMessageDialog(null, "Exotic type cannot be empty.");
+					continue;
+				}
+				type = exoticType;
+			}
+
+			int newId = ShelterManager.getInstance().generateUniqueId();
+			Pet newPet = PetFactory.createPet(type, newId, name, species, age);
+			ShelterManager.getInstance().addPetToShelter(newPet);
+
+			JOptionPane.showMessageDialog(null, "Pet added successfully!");
+			inputValid = true;
+
+			PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
+			petPanel.getPetTable().setModel(model);
+		}
+	}
 
 	private void showAdoptPetDialog() {
 		JPanel panel = new JPanel();
@@ -193,48 +242,48 @@ public class PetPanelController {
 	}
 
 	private void showRemovePetDialog() {
-	    JPanel panel = new JPanel();
-	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+		JPanel panel = new JPanel();
+		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
 
-	    JTextField idField = new JTextField(10);
+		JTextField idField = new JTextField(10);
 
-	    panel.add(new JLabel("Enter Pet ID:"));
-	    panel.add(idField);
+		panel.add(new JLabel("Enter Pet ID:"));
+		panel.add(idField);
 
-	    int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
+		int option = JOptionPane.showConfirmDialog(null, panel, "Adopt Pet", JOptionPane.OK_CANCEL_OPTION);
 
-	    if (option == JOptionPane.OK_OPTION) {
-	        try {
-	            int petId = Integer.parseInt(idField.getText().trim());
-	            Pet pet = ShelterManager.getInstance().getPetById(petId);
+		if (option == JOptionPane.OK_OPTION) {
+			try {
+				int petId = Integer.parseInt(idField.getText().trim());
+				Pet pet = ShelterManager.getInstance().getPetById(petId);
 
-	            if (pet == null) {
-	                JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
-	                return;
-	            }
+				if (pet == null) {
+					JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
+					return;
+				}
 
-	            boolean removed = false;
+				boolean removed = false;
 
-	            if (pet instanceof Dog) {
-	                removed = ShelterManager.getInstance().removeDog(petId);
-	            } else if (pet instanceof Cat) {
-	                removed = ShelterManager.getInstance().removeCat(petId);
-	            } else if (pet instanceof Rabbit) {
-	                removed = ShelterManager.getInstance().removeRabbit(petId);
-	            } else if (pet instanceof ExoticAnimalAdapter) {
-	                removed = ShelterManager.getInstance().removeExotic(petId);
-	            }
+				if (pet instanceof Dog) {
+					removed = ShelterManager.getInstance().removeDog(petId);
+				} else if (pet instanceof Cat) {
+					removed = ShelterManager.getInstance().removeCat(petId);
+				} else if (pet instanceof Rabbit) {
+					removed = ShelterManager.getInstance().removeRabbit(petId);
+				} else if (pet instanceof ExoticAnimalAdapter) {
+					removed = ShelterManager.getInstance().removeExotic(petId);
+				}
 
-	            if (removed) {
-	                PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
-	                petPanel.getPetTable().setModel(model);
-	            } else {
-	                JOptionPane.showMessageDialog(null, "Pet has already been removed.");
-	            }
+				if (removed) {
+					PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
+					petPanel.getPetTable().setModel(model);
+				} else {
+					JOptionPane.showMessageDialog(null, "Pet has already been removed.");
+				}
 
-	        } catch (NumberFormatException ex) {
-	            JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
-	        }
-	    }
+			} catch (NumberFormatException ex) {
+				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
+			}
+		}
 	}
 }
