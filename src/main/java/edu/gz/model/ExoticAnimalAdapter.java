@@ -16,7 +16,7 @@ public class ExoticAnimalAdapter extends Pet {
      * @param exoticAnimal the exotic animal to be adapted
      */
     public ExoticAnimalAdapter(ExoticAnimal exoticAnimal) {        
-        super(exoticAnimal.getUniqueId(), exoticAnimal.getAnimalName(), exoticAnimal.getCategory(), exoticAnimal.getSubSpecies(), exoticAnimal.getYearsOld(), false);
+        super(exoticAnimal.getId(), exoticAnimal.getAnimalName(), exoticAnimal.getCategory(), exoticAnimal.getSubSpecies(), exoticAnimal.getYearsOld(), false);
         this.exoticAnimal = exoticAnimal;
     }
 
