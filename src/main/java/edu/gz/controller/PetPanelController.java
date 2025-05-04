@@ -32,6 +32,7 @@ public class PetPanelController {
 		petPanel.getAddButton().addActionListener(new AddButtonListener());
 		petPanel.getAdoptButton().addActionListener(new AdoptButtonListener());
 		petPanel.getRemoveButton().addActionListener(new RemoveButtonListener());
+		petPanel.getViewButton().addActionListener(new ViewButtonListener());
 		petPanel.getSaveButton().addActionListener(new SaveButtonListener());
 	}
 
@@ -62,6 +63,13 @@ public class PetPanelController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			showRemovePetDialog();
+		}
+	}
+	
+	private class ViewButtonListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			showViewDialog();
 		}
 	}
 
@@ -222,7 +230,15 @@ public class PetPanelController {
 		if (option == JOptionPane.OK_OPTION) {
 			try {
 				int petId = Integer.parseInt(idField.getText().trim());
-				String petType = ShelterManager.getInstance().getPetById(petId).getType();
+				Pet pet = ShelterManager.getInstance().getPetById(petId);
+				
+				if (pet == null) {
+					JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
+					return;
+				}
+				
+				String petType = pet.getType();
+				
 				boolean isAdopted = false;
 
 				switch (petType) {
@@ -295,6 +311,45 @@ public class PetPanelController {
 				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
 			}
 		}
+	}
+	
+	private void showViewDialog() {
+	    JPanel panel = new JPanel();
+	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+	    
+	    JTextField idField = new JTextField(10);
+
+	    panel.add(new JLabel("Enter Pet ID:"));
+	    panel.add(idField);
+	    
+	    int option = JOptionPane.showConfirmDialog(null, panel, "View Pet", JOptionPane.OK_CANCEL_OPTION);
+
+	    if (option == JOptionPane.OK_OPTION) {
+	        try {
+	            int petId = Integer.parseInt(idField.getText().trim());
+	            Pet pet = ShelterManager.getInstance().getPetById(petId);
+
+	            if (pet == null) {
+	                JOptionPane.showMessageDialog(null, "Pet not found with the provided ID.");
+	                return;
+	            }
+
+	            JPanel detailPanel = new JPanel();
+	            detailPanel.setLayout(new BoxLayout(detailPanel, BoxLayout.Y_AXIS));
+
+	            detailPanel.add(new JLabel("ID: " + pet.getId()));
+	            detailPanel.add(new JLabel("Name: " + pet.getName()));
+	            detailPanel.add(new JLabel("Age: " + pet.getAge()));
+	            detailPanel.add(new JLabel("Species: " + pet.getSpecies()));
+	            detailPanel.add(new JLabel("Type: " + pet.getType()));
+	            detailPanel.add(new JLabel("Adopted: " + (pet.isAdopted() ? "Yes" : "No")));
+
+	            JOptionPane.showMessageDialog(null, detailPanel, "Pet Details", JOptionPane.INFORMATION_MESSAGE);
+
+	        } catch (NumberFormatException ex) {
+	            JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
+	        }
+	    }
 	}
 
 	private void sortPetTable(String selected) {
