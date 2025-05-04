@@ -223,11 +223,9 @@ public class PetPanelController {
 				case "Rabbit":
 					isAdopted = ShelterManager.getInstance().adoptRabbit(petId);
 					break;
-				case "Exotic":
+				default:
 					isAdopted = ShelterManager.getInstance().adoptExotic(petId);
 					break;
-				default:
-					JOptionPane.showMessageDialog(null, "Invalid pet type.");
 				}
 				if (isAdopted) {
 					PetTableModel model = new PetTableModel(ShelterManager.getInstance().getAllPets());
