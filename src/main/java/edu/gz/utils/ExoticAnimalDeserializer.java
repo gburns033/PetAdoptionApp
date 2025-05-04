@@ -17,7 +17,7 @@ public class ExoticAnimalDeserializer implements JsonDeserializer<ExoticAnimalAd
         int yearsOld = jsonObject.get("yearsOld").getAsInt();
 
         ExoticAnimal exoticAnimal = new ExoticAnimal();
-        exoticAnimal.setUniqueId(Integer.parseInt(uniqueId.substring(3)));
+        exoticAnimal.setUniqueId(uniqueId);
         exoticAnimal.setAnimalName(animalName);
         exoticAnimal.setCategory(category);
         exoticAnimal.setSubSpecies(subSpecies);

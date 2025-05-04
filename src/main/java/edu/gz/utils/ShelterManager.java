@@ -2,14 +2,17 @@ package edu.gz.utils;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import edu.gz.model.*;
 
 public class ShelterManager {
 	private static ShelterManager instance;
 	private Map<String, Shelter<? extends Pet>> shelters;
+	private Set<Integer> usedIds = new HashSet<>();
 
 	private ShelterManager() {
 		shelters = new HashMap<>();
@@ -25,6 +28,33 @@ public class ShelterManager {
 		}
 
 		return instance;
+	}
+	
+	public boolean registerUsedId(int id) {
+	    return usedIds.add(id);
+	}
+	
+	public int generateUniqueId() {
+	    int id = 1;
+	    while (usedIds.contains(id)) {
+	        id++;
+	    }
+	    
+	    usedIds.add(id);
+	    return id;
+	}
+	
+	public boolean addPetToShelter(Pet pet) {
+		if (pet instanceof Dog) {
+			return ShelterManager.getInstance().addDogToShelter((Dog) pet);
+		} else if (pet instanceof Cat) {
+			return ShelterManager.getInstance().addCatToShelter((Cat) pet);
+		} else if (pet instanceof Rabbit) {
+			return ShelterManager.getInstance().addRabbitToShelter((Rabbit) pet);
+		} else if (pet instanceof ExoticAnimalAdapter) {
+			return ShelterManager.getInstance().addExoticToShelter((ExoticAnimalAdapter) pet);
+		}
+		return false;
 	}
 
 	public boolean addDogToShelter(Dog dog) {
