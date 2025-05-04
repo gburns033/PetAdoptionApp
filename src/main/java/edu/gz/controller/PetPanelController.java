@@ -20,10 +20,19 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * Controller class for managing interactions between the PetPanel UI and the data model.
+ * Handles actions such as adding, adopting, removing, viewing, sorting, and saving pets.
+ */
 public class PetPanelController {
 
 	private PetPanel petPanel;
 
+    /**
+     * Constructs a new PetPanelController and binds action listeners to panel components.
+     *
+     * @param petPanel the PetPanel associated with this controller
+     */
 	public PetPanelController(PetPanel petPanel) {
 		this.petPanel = petPanel;
 
@@ -36,6 +45,9 @@ public class PetPanelController {
 		petPanel.getSaveButton().addActionListener(new SaveButtonListener());
 	}
 
+    /**
+     * Listener for handling changes in the pet sort combo box selection.
+     */
 	private class SortComboBoxListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -45,6 +57,9 @@ public class PetPanelController {
 		}
 	}
 
+    /**
+     * Listener for the Add button to initiate the add-pet dialog.
+     */
 	private class AddButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -52,13 +67,19 @@ public class PetPanelController {
 		}
 	}
 
+    /**
+     * Listener for the Adopt button to initiate the adopt-pet process.
+     */
 	private class AdoptButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			showAdoptPetDialog();
 		}
 	}
-
+	
+    /**
+     * Listener for the Remove button to initiate the remove-pet process.
+     */
 	private class RemoveButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -66,6 +87,9 @@ public class PetPanelController {
 		}
 	}
 	
+    /**
+     * Listener for the View button to view pet details.
+     */
 	private class ViewButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -73,6 +97,9 @@ public class PetPanelController {
 		}
 	}
 
+    /**
+     * Listener for the Save button to persist pet data.
+     */
 	private class SaveButtonListener implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
@@ -82,6 +109,9 @@ public class PetPanelController {
 		}
 	}
 
+    /**
+     * Displays the dialog to input details and add a new pet to the shelter.
+     */
 	private void showAddPetDialog() {
 		JTextField nameField = new JTextField(15);
 		JTextField ageField = new JTextField(15);
@@ -97,7 +127,6 @@ public class PetPanelController {
 
 		JPanel panel = new JPanel(new GridBagLayout());
 
-		// Initial "hidden but reserved" state
 		exoticTypeField.setEditable(false);
 		exoticTypeField.setOpaque(false);
 		exoticTypeField.setBorder(null);
@@ -127,7 +156,6 @@ public class PetPanelController {
 		gbc.gridx = 1;
 		panel.add(speciesComboBox, gbc);
 
-		// Exotic Type
 		gbc.gridx = 0;
 		gbc.gridy = 3;
 		panel.add(exoticTypeLabel, gbc);
@@ -140,7 +168,6 @@ public class PetPanelController {
 		gbc.gridx = 1;
 		panel.add(speciesField, gbc);
 
-		// Listener for showing/hiding exotic type
 		speciesComboBox.addActionListener(e -> {
 			boolean isExotic = speciesComboBox.getSelectedItem().toString().startsWith("Exotic");
 
@@ -149,7 +176,7 @@ public class PetPanelController {
 				exoticTypeField.setOpaque(true);
 				exoticTypeField.setBackground(Color.WHITE);
 				exoticTypeField.setBorder(UIManager.getBorder("TextField.border"));
-				exoticTypeLabel.setForeground(null); // Restore default color
+				exoticTypeLabel.setForeground(null);
 			} else {
 				exoticTypeField.setEditable(false);
 				exoticTypeField.setText("");
@@ -216,6 +243,9 @@ public class PetPanelController {
 		}
 	}
 
+    /**
+     * Displays the dialog to adopt a pet by entering its ID.
+     */
 	private void showAdoptPetDialog() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -267,6 +297,9 @@ public class PetPanelController {
 		}
 	}
 
+    /**
+     * Displays the dialog to remove a pet by entering its ID.
+     */
 	private void showRemovePetDialog() {
 		JPanel panel = new JPanel();
 		panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -313,6 +346,9 @@ public class PetPanelController {
 		}
 	}
 	
+    /**
+     * Displays the dialog to view details of a pet by entering its ID.
+     */
 	private void showViewDialog() {
 	    JPanel panel = new JPanel();
 	    panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -352,6 +388,11 @@ public class PetPanelController {
 	    }
 	}
 
+    /**
+     * Sorts the pet table based on the selected sorting criterion (e.g., name, age).
+     *
+     * @param selected the selected sorting option from the combo box
+     */
 	private void sortPetTable(String selected) {
 		List<Pet> pets = ShelterManager.getInstance().getAllPets();
 
