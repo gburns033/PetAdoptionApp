@@ -27,7 +27,6 @@ public class PetPanelController {
 		petPanel.getAddButton().addActionListener(new AddButtonListener());
 		petPanel.getAdoptButton().addActionListener(new AdoptButtonListener());
 		petPanel.getRemoveButton().addActionListener(new RemoveButtonListener());
-		petPanel.getViewButton().addActionListener(new ViewButtonListener());
 		petPanel.getSaveButton().addActionListener(new SaveButtonListener());
 	}
 
@@ -49,13 +48,6 @@ public class PetPanelController {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			showRemovePetDialog();
-		}
-	}
-
-	private class ViewButtonListener implements ActionListener {
-		@Override
-		public void actionPerformed(ActionEvent e) {
-
 		}
 	}
 

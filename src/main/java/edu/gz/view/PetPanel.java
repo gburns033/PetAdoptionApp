@@ -29,13 +29,11 @@ public class PetPanel extends JPanel {
 		addButton = new JButton("Add");
 		adoptButton = new JButton("Adopt");
 		removeButton = new JButton("Remove");
-		viewButton = new JButton("View Details");
 		saveButton = new JButton("Save");
 
 		bottomPanel.add(addButton);
 		bottomPanel.add(adoptButton);
 		bottomPanel.add(removeButton);
-		bottomPanel.add(viewButton);
 		bottomPanel.add(saveButton);
 
 		add(bottomPanel, BorderLayout.SOUTH);
