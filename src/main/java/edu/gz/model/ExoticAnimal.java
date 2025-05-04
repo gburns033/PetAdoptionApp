@@ -12,10 +12,21 @@ public class ExoticAnimal {
 	private String subSpecies;
 	private int yearsOld;
 
+	/**
+	 * Default constructor for ExoticAnimal.
+	 * Initializes an instance with default (null/zero) values.
+	 */
 	public ExoticAnimal() {
 
 	}
 
+	/**
+	 * Constructs an ExoticAnimal from an ExoticAnimalAdapter.
+	 * Generates the unique ID in the format "exoXXX", and sets the name, category,
+	 * sub-species, and age using data from the adapter.
+	 *
+	 * @param adapter the ExoticAnimalAdapter containing initialization data
+	 */
 	public ExoticAnimal(ExoticAnimalAdapter adapter) {
 		this.uniqueId = String.format("exo%03d", adapter.getId());
 		this.animalName = adapter.getName();
