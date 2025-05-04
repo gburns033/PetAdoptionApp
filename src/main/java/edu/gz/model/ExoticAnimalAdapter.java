@@ -36,6 +36,11 @@ public class ExoticAnimalAdapter extends Pet {
         this.exoticAnimal = new ExoticAnimal(this);
     }
     
+    /**
+     * Returns the underlying {@link ExoticAnimal} instance associated with this adapter.
+     *
+     * @return the adapted exotic animal
+     */
     public ExoticAnimal GetExoticAnimal() {
     	return exoticAnimal;
     }
