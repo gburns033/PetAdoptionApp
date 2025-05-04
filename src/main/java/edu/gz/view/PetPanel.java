@@ -17,7 +17,7 @@ public class PetPanel extends JPanel {
 		setLayout(new BorderLayout());
 
 		JPanel topPanel = new JPanel(new FlowLayout());
-		sortComboBox = new JComboBox<>(new String[] { "Name", "Age", "Species" });
+		sortComboBox = new JComboBox<>(new String[] { "None", "Name", "Age", "Type", "Species" });
 		topPanel.add(new JLabel("Sort by:"));
 		topPanel.add(sortComboBox);
 		add(topPanel, BorderLayout.NORTH);

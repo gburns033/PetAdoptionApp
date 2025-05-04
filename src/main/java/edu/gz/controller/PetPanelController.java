@@ -16,6 +16,9 @@ import java.awt.GridLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
 
 public class PetPanelController {
 
@@ -24,10 +27,21 @@ public class PetPanelController {
 	public PetPanelController(PetPanel petPanel) {
 		this.petPanel = petPanel;
 
+		petPanel.getSortComboBox().addActionListener(new SortComboBoxListener());
+
 		petPanel.getAddButton().addActionListener(new AddButtonListener());
 		petPanel.getAdoptButton().addActionListener(new AdoptButtonListener());
 		petPanel.getRemoveButton().addActionListener(new RemoveButtonListener());
 		petPanel.getSaveButton().addActionListener(new SaveButtonListener());
+	}
+
+	private class SortComboBoxListener implements ActionListener {
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			JComboBox<String> comboBox = (JComboBox<String>) e.getSource();
+			String selected = (String) comboBox.getSelectedItem();
+			sortPetTable(selected);
+		}
 	}
 
 	private class AddButtonListener implements ActionListener {
@@ -87,28 +101,33 @@ public class PetPanelController {
 		gbc.anchor = GridBagConstraints.WEST;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		gbc.gridx = 0; gbc.gridy = 0;
+		gbc.gridx = 0;
+		gbc.gridy = 0;
 		panel.add(new JLabel("Name:"), gbc);
 		gbc.gridx = 1;
 		panel.add(nameField, gbc);
 
-		gbc.gridx = 0; gbc.gridy = 1;
+		gbc.gridx = 0;
+		gbc.gridy = 1;
 		panel.add(new JLabel("Age:"), gbc);
 		gbc.gridx = 1;
 		panel.add(ageField, gbc);
 
-		gbc.gridx = 0; gbc.gridy = 2;
+		gbc.gridx = 0;
+		gbc.gridy = 2;
 		panel.add(new JLabel("Type:"), gbc);
 		gbc.gridx = 1;
 		panel.add(speciesComboBox, gbc);
 
 		// Exotic Type
-		gbc.gridx = 0; gbc.gridy = 3;
+		gbc.gridx = 0;
+		gbc.gridy = 3;
 		panel.add(exoticTypeLabel, gbc);
 		gbc.gridx = 1;
 		panel.add(exoticTypeField, gbc);
 
-		gbc.gridx = 0; gbc.gridy = 4;
+		gbc.gridx = 0;
+		gbc.gridy = 4;
 		panel.add(new JLabel("Species (e.g., Siamese, Iguana):"), gbc);
 		gbc.gridx = 1;
 		panel.add(speciesField, gbc);
@@ -136,8 +155,8 @@ public class PetPanelController {
 		boolean inputValid = false;
 
 		while (!inputValid) {
-			int result = JOptionPane.showConfirmDialog(null, panel, "Add New Pet",
-					JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
+			int result = JOptionPane.showConfirmDialog(null, panel, "Add New Pet", JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.PLAIN_MESSAGE);
 
 			if (result != JOptionPane.OK_OPTION) {
 				return;
@@ -156,7 +175,8 @@ public class PetPanelController {
 			int age;
 			try {
 				age = Integer.parseInt(ageText);
-				if (age < 0) throw new NumberFormatException();
+				if (age < 0)
+					throw new NumberFormatException();
 			} catch (NumberFormatException e) {
 				JOptionPane.showMessageDialog(null, "Age must be 0 or above.");
 				continue;
@@ -275,5 +295,32 @@ public class PetPanelController {
 				JOptionPane.showMessageDialog(null, "Please enter a valid pet ID.");
 			}
 		}
+	}
+
+	private void sortPetTable(String selected) {
+		List<Pet> pets = ShelterManager.getInstance().getAllPets();
+
+		switch (selected) {
+		case "Name":
+			Collections.sort(pets);
+			break;
+		case "Age":
+			Collections.sort(pets, new AgeComparator<>());
+			break;
+		case "Species":
+			Collections.sort(pets, new SpeciesComparator<>());
+			break;
+		case "Type":
+			Collections.sort(pets, new TypeComparator<>());
+			break;
+		case "None":
+			break;
+		default:
+			System.out.println("Unknown sort option: " + selected);
+			return;
+		}
+
+		PetTableModel model = new PetTableModel(pets);
+		petPanel.getPetTable().setModel(model);
 	}
 }
