@@ -23,8 +23,6 @@ public class JsonLoader {
 			}
 
 			InputStreamReader reader = new InputStreamReader(is);
-//			
-//			printInputStream(is); 
 
 			Type petListType = new TypeToken<List<Pet>>() {
 			}.getType();
@@ -50,18 +48,6 @@ public class JsonLoader {
 			throw new RuntimeException("Failed to load pets: " + e.getMessage(), e);
 		}
 	}
-	
-    public static void printInputStream(InputStream inputStream) {
-        try (InputStreamReader reader = new InputStreamReader(inputStream);
-             BufferedReader bufferedReader = new BufferedReader(reader)) {
-            String line;
-            while ((line = bufferedReader.readLine()) != null) {
-                System.out.println(line);
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
 
 	public static ShelterManager loadExoticPets(String resourcePath) {
 		try {
@@ -72,8 +58,6 @@ public class JsonLoader {
 			if (is == null) {
 				throw new RuntimeException("File not found: " + resourcePath);
 			}
-			
-//			printInputStream(is);
 
 			InputStreamReader reader = new InputStreamReader(is);
 
@@ -84,6 +68,10 @@ public class JsonLoader {
 			ShelterManager manager = ShelterManager.getInstance();
 
 			for (ExoticAnimalAdapter exoticPet : exoticPets) {
+				if (manager.registerUsedId(exoticPet.getId()) == false) {
+					exoticPet.setId(manager.generateUniqueId());
+				}
+				
 				manager.addExoticToShelter(exoticPet);
 			}
 
