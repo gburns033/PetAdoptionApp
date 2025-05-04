@@ -11,8 +11,20 @@ import java.io.InputStream;
 import java.lang.reflect.Type;
 import java.util.List;
 
+/**
+ * JsonLoader is responsible for loading pet data from JSON files and populating the shelters
+ * within the ShelterManager.
+ */
 public class JsonLoader {
 	
+	/**
+	 * Loads pets data from the specified JSON resource path, deserializes the data into Pet objects,
+	 * and adds them to the appropriate shelters in the ShelterManager.
+	 *
+	 * @param resourcePath The path to the JSON file containing pet data.
+	 * @return An instance of ShelterManager populated with pets.
+	 * @throws RuntimeException If the file is not found or an error occurs during deserialization.
+	 */
 	public static ShelterManager loadPets(String resourcePath) {
 		try {
 			Gson gson = new GsonBuilder().registerTypeAdapter(Pet.class, new PetDeserializer()).create();
@@ -49,6 +61,14 @@ public class JsonLoader {
 		}
 	}
 
+	/**
+	 * Loads exotic pets data from the specified JSON resource path, deserializes the data into ExoticAnimalAdapter objects,
+	 * and adds them to the exotic shelter in the ShelterManager.
+	 *
+	 * @param resourcePath The path to the JSON file containing exotic animal data.
+	 * @return An instance of ShelterManager populated with exotic animals.
+	 * @throws RuntimeException If the file is not found or an error occurs during deserialization.
+	 */
 	public static ShelterManager loadExoticPets(String resourcePath) {
 		try {
 			Gson gson = new GsonBuilder().registerTypeAdapter(ExoticAnimalAdapter.class, new ExoticAnimalDeserializer())

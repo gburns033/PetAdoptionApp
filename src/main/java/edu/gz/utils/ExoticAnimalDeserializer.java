@@ -5,7 +5,22 @@ import edu.gz.model.*;
 
 import java.lang.reflect.Type;
 
+/**
+ * Custom deserializer for converting JSON objects into {@link ExoticAnimalAdapter} instances.
+ * This class is used by Gson to deserialize JSON representations of exotic animals
+ * into their corresponding adapter objects.
+ */
 public class ExoticAnimalDeserializer implements JsonDeserializer<ExoticAnimalAdapter> {
+
+    /**
+     * Deserializes the specified JSON element into an {@link ExoticAnimalAdapter}.
+     *
+     * @param json the JSON data being deserialized
+     * @param typeOfT the type of the Object to deserialize to
+     * @param context the deserialization context
+     * @return an {@code ExoticAnimalAdapter} containing a deserialized {@code ExoticAnimal}
+     * @throws JsonParseException if the JSON is not in the expected format
+     */
     @Override
     public ExoticAnimalAdapter deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
         JsonObject jsonObject = json.getAsJsonObject();

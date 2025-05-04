@@ -14,10 +14,17 @@ import edu.gz.model.ExoticAnimal;
 import edu.gz.model.ExoticAnimalAdapter;
 import edu.gz.model.Pet;
 
+/**
+ * Utility class for saving pet data to JSON files.
+ * This class handles serialization of standard and exotic pets to separate timestamped files.
+ */
 public class PetDataSaver {
 
+    /**
+     * Saves all standard pets (dogs, cats, rabbits) currently in the {@link ShelterManager}
+     * to a JSON file. The filename is timestamped to ensure uniqueness.
+     */
     public void savePets() {
-
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String filePath = timestamp + "_pets.json";
 
@@ -36,18 +43,24 @@ public class PetDataSaver {
         }
     }
 
+    /**
+     * Saves all exotic pets from the given {@link ShelterManager} to a JSON file.
+     * The data is extracted from {@link ExoticAnimalAdapter} and converted to raw {@link ExoticAnimal} objects.
+     * The filename is timestamped to ensure uniqueness.
+     *
+     * @param manager the {@link ShelterManager} instance containing exotic pets
+     */
     public void saveExoticAnimals(ShelterManager manager) {
-
         String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String filePath = timestamp + "_exotic_animals.json";
 
         Gson gson = new GsonBuilder().setPrettyPrinting().create();
         List<ExoticAnimal> exoticAnimals = new ArrayList<>();
-        
+
         for (ExoticAnimalAdapter adapter : manager.getExoticShelter().getAllPets()) {
-        	exoticAnimals.add(adapter.GetExoticAnimal());
+            exoticAnimals.add(adapter.GetExoticAnimal());
         }
-        
+
         try (FileWriter writer = new FileWriter(filePath)) {
             gson.toJson(exoticAnimals, writer);
             System.out.println("Exotic pets data has been saved successfully to: " + filePath);
